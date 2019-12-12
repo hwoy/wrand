@@ -1,0 +1,25 @@
+[package]
+name = "wrand"
+version = "0.1.0"
+authors = ["Watthanachai Dueanklang <bosskillerz@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[[example]]
+name = "rand_glibc"
+
+[[example]]
+name = "rand_msvcrt"
+
+[[example]]
+name = "rand_glibctypen"
+
+[[example]]
+name = "shuffle_deck"
+
+[[example]]
+name = "test_derive"
+
