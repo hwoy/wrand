@@ -169,10 +169,9 @@ pub mod lgc {
     }
 
     impl Lgcglibctypen {
-
         pub fn with_seed(seed: u32) -> Self {
             let mut buffer = Vec::<i32>::with_capacity(344usize);
-            buffer.resize(344usize,0);
+            buffer.resize(344usize, 0);
             let buffer = buffer.as_mut_slice();
 
             buffer[0] = seed as i32;
@@ -194,18 +193,7 @@ pub mod lgc {
                 buffer[i] = buffer[i - 31].wrapping_add(buffer[i - 3]);
             }
 
-            let mut states= Vec::<i32>::with_capacity(31usize);
-            states.resize(31usize,0);
-
-            {
-                let states = states.as_mut_slice();
-
-                let start_offset = buffer.len()-states.len();
-
-                let (_,buffer) = buffer.split_at(start_offset);
-
-                states.copy_from_slice(buffer);
-            }
+            let states: Vec<i32> = buffer.iter().rev().take(31usize).rev().copied().collect();
 
             Self { states: states }
         }
@@ -219,8 +207,7 @@ pub mod lgc {
             let states = self.states.as_mut_slice();
             let len = states.len();
 
-            let val = states[len - 31]
-                .wrapping_add(states[len - 3]);
+            let val = states[len - 31].wrapping_add(states[len - 3]);
             states.rotate_left(1);
             states[len - 1] = val;
             ((val as u32) >> 1) as i32
