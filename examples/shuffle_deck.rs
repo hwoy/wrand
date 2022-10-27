@@ -1,5 +1,5 @@
 extern crate wrand;
-use wrand::{lgc , Gen};
+use wrand::{lgc, Gen};
 
 use std::collections::LinkedList;
 use std::string::String;

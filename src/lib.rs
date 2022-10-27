@@ -1,56 +1,3 @@
-/*
-
-#include <stdio.h>
-
-#define MAX 1000
-#define seed 1
-
-main() {
-  int buffer[MAX];
-  int i;
-
-  buffer[0] = seed;
-  for (i=1; i<31; i++) {
-    buffer[i] = (16807LL * buffer[i-1]) % 2147483647;
-    if (buffer[i] < 0) {
-      buffer[i] += 2147483647;
-    }
-  }
-  for (i=31; i<34; i++) {
-    buffer[i] = buffer[i-31];
-  }
-  for (i=34; i<344; i++) {
-    buffer[i] = buffer[i-31] + buffer[i-3];
-  }
-
-  for (i=344; i<MAX; i++) {
-    buffer[i] = buffer[i-31] + buffer[i-3];
-    printf("%d\n", ((unsigned int)buffer[i]) >> 1);
-  }
-
-  return 0;
-}
-
-*/
-
-/*
-
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void) {
-  unsigned int i;
-  srand(-1);
-
-  for(i=0;i<10;++i)
-    printf("%d\n",rand());
-  return 0;
-}
-
-*/
-
-#![crate_type = "lib"]
-
 pub mod seed {
     use std::time::SystemTime;
     pub fn getseed() -> u32 {
@@ -61,16 +8,21 @@ pub mod seed {
     }
 }
 
+use std::ops::Range;
 pub trait Gen {
     fn gen(&mut self) -> i32;
+
+    fn gen_range(&mut self, r: Range<i32>) -> i32 {
+        r.start + (self.gen() % (r.end - r.start))
+    }
 }
 
 pub fn random<T: Gen>(gen: &mut T, a: i32, b: i32) -> Option<i32> {
-    if a > b {
-        return None;
+    if b < a {
+        Some(gen.gen_range(a..(b + 1)))
+    } else {
+        None
     }
-    let moder = b - a + 1;
-    Some(a + gen.gen() % moder)
 }
 
 pub mod lgc {
