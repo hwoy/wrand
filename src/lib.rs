@@ -18,7 +18,7 @@ pub trait Gen {
 }
 
 pub fn random<T: Gen>(gen: &mut T, a: i32, b: i32) -> Option<i32> {
-    if b < a {
+    if a <= b {
         Some(gen.gen_range(a..(b + 1)))
     } else {
         None
@@ -28,7 +28,6 @@ pub fn random<T: Gen>(gen: &mut T, a: i32, b: i32) -> Option<i32> {
 pub mod lgc {
     use super::seed;
     use super::Gen;
-    use std::vec::Vec;
 
     #[derive(Clone, Copy)]
     pub struct Lgc {
@@ -117,14 +116,12 @@ pub mod lgc {
 
     #[derive(Clone)]
     pub struct Lgcglibctypen {
-        states: Vec<i32>,
+        states: Box<[i32]>,
     }
 
     impl Lgcglibctypen {
         pub fn with_seed(seed: u32) -> Self {
-            let mut buffer = Vec::<i32>::with_capacity(344usize);
-            buffer.resize(344usize, 0);
-            let buffer = buffer.as_mut_slice();
+            let mut buffer: Box<[i32]> = std::iter::repeat(0).take(344).collect();
 
             buffer[0] = seed as i32;
 
@@ -145,7 +142,7 @@ pub mod lgc {
                 buffer[i] = buffer[i - 31].wrapping_add(buffer[i - 3]);
             }
 
-            let states: Vec<i32> = buffer.iter().rev().take(31usize).rev().copied().collect();
+            let states: Box<[i32]> = buffer.iter().rev().take(31).rev().copied().collect();
 
             Self { states: states }
         }
@@ -156,7 +153,7 @@ pub mod lgc {
 
     impl Gen for Lgcglibctypen {
         fn gen(&mut self) -> i32 {
-            let states = self.states.as_mut_slice();
+            let states = &mut self.states;
             let len = states.len();
 
             let val = states[len - 31].wrapping_add(states[len - 3]);
