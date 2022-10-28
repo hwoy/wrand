@@ -3,11 +3,12 @@ pub type RANDTYPE = u32;
 
 pub mod seed {
     use std::time::SystemTime;
-    pub fn getseed() -> super::SEEDTYPE{
+    pub fn getseed() -> super::SEEDTYPE {
         SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
-            .subsec_micros() as super::SEEDTYPE    }
+            .subsec_micros() as super::SEEDTYPE
+    }
 }
 
 use std::ops::{Add, Range, Rem, Sub};
@@ -26,7 +27,7 @@ pub trait Gen {
         r.start + (self.gen() % (r.end - r.start))
     }
 
-    fn into_iter(self) -> GenIterator<Self>
+    fn geniter(&mut self) -> GenIterator<Self>
     where
         Self: Sized,
     {
@@ -34,11 +35,11 @@ pub trait Gen {
     }
 }
 
-pub struct GenIterator<T: Gen> {
-    gen: T,
+pub struct GenIterator<'a, T: Gen + 'a> {
+    gen: &'a mut T,
 }
 
-impl<T: Gen> Iterator for GenIterator<T> {
+impl<T: Gen> Iterator for GenIterator<'_, T> {
     type Item = T::Output;
     fn next(&mut self) -> Option<T::Output> {
         Some(self.gen.gen())
