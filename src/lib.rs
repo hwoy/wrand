@@ -1,6 +1,9 @@
 pub mod gen;
 pub use gen::*;
 
+pub type SEEDTYPE = u32;
+pub type RANDTYPE = u32;
+
 pub mod seed {
     use std::time::SystemTime;
     pub fn getseed() -> super::SEEDTYPE {

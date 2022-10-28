@@ -1,6 +1,3 @@
-pub type SEEDTYPE = u32;
-pub type RANDTYPE = u32;
-
 use std::ops::{Add, Range, Rem, Sub};
 pub trait Gen {
     type Output;
