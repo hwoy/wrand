@@ -6,7 +6,7 @@ fn main() {
         .take(100)
         .map(|x| x % (100 - 1 + 1) + 1);
 
-    let b: Box<[i32]> = iter.collect();
+    let b: Box<_> = iter.collect();
 
     for i in b.iter() {
         println!("{}", i);
