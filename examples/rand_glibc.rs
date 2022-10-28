@@ -1,9 +1,9 @@
 extern crate wrand;
-use wrand::{lgc, Gen};
+use wrand::{rng, Gen};
 fn main() {
-    let mut lgc = lgc::Lgcglibc::with_seed(-1i32 as u32);
+    let mut rng = rng::Lgcglibc::with_seed(-1i32 as u32);
 
     for _ in 0..10 {
-        println!("{}", lgc.gen());
+        println!("{}", rng.gen());
     }
 }

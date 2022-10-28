@@ -1,7 +1,7 @@
 extern crate wrand;
-use wrand::{lgc, Gen};
+use wrand::{rng, Gen};
 fn main() {
-    let mut rng = lgc::Lgcglibc::with_seed(-1i32 as u32);
+    let mut rng = rng::Lgcglibc::with_seed(-1i32 as u32);
 
     let iter = rng.geniter().take(100).map(|x| x % (100 - 1 + 1) + 1);
 
@@ -19,7 +19,7 @@ fn main() {
 
     println!("==============================================");
 
-    for i in lgc::Lgcglibc::with_seed(10).into_geniter().take(20) {
+    for i in rng::Lgcglibc::with_seed(10).into_geniter().take(20) {
         println!("{}", i);
     }
 }

@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 extern crate wrand;
-use wrand::{lgc, Gen};
+use wrand::{rng, Gen};
 
 use std::collections::LinkedList;
 use std::string::String;
@@ -168,7 +168,7 @@ impl Deck {
 }
 
 fn main() {
-    let mut lgc = lgc::Lgcmsvcrt::new();
+    let mut rng = rng::Lgcmsvcrt::new();
 
     let mut maindeck = Deck::new();
 
@@ -177,7 +177,7 @@ fn main() {
     }
 
     println!("\n================= Shuffle =================\n");
-    maindeck.shuffle(&mut lgc, 1024);
+    maindeck.shuffle(&mut rng, 1024);
 
     for (i, card) in maindeck.deck.iter().enumerate() {
         println!("{}:{}[{}]", i, card.suit.name, card.rank.name);
