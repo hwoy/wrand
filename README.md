@@ -1,6 +1,6 @@
 # wrand
 
-wrand is a very simple random library for Rust.
+wrand stands for Hwoy's random, is a very simple random library for Rust.
 
 ## Features
 
