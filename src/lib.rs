@@ -63,7 +63,6 @@ pub mod lgc {
     use super::seed;
     use super::Gen;
 
-    #[derive(Clone, Copy)]
     pub struct Lgc {
         state: u32,
         a: u32,
@@ -91,7 +90,6 @@ pub mod lgc {
         }
     }
 
-    #[derive(Clone, Copy)]
     pub struct Lgcglibc {
         lgc: Lgc,
     }
@@ -121,7 +119,6 @@ pub mod lgc {
         }
     }
 
-    #[derive(Clone, Copy)]
     pub struct Lgcmsvcrt {
         lgc: Lgc,
     }
@@ -151,7 +148,6 @@ pub mod lgc {
         }
     }
 
-    #[derive(Clone)]
     pub struct Lgcglibctypen {
         states: Box<[i32]>,
     }

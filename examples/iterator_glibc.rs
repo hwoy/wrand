@@ -5,6 +5,7 @@ fn main() {
         .into_iter()
         .take(100)
         .map(|x| x % (100 - 1 + 1) + 1);
+
     let b: Box<[i32]> = iter.collect();
 
     for i in b.iter() {

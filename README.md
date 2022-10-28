@@ -5,7 +5,8 @@ wrand is a very simple random library for Rust.
 ## Features
 
 1. Full open source.
-2. No requirement.
+2. Provides iterator.
+3. Provides basic lgc PRNG, msvcrt PRNG, glibc PRNG
 
 ```Rust
 
