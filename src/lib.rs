@@ -23,6 +23,24 @@ pub trait Gen {
     {
         r.start + (self.gen() % (r.end - r.start))
     }
+
+    fn into_iter(self) -> GenIterator<Self>
+    where
+        Self: Sized,
+    {
+        GenIterator { gen: self }
+    }
+}
+
+pub struct GenIterator<T: Gen> {
+    gen: T,
+}
+
+impl<T: Gen> Iterator for GenIterator<T> {
+    type Item = T::Output;
+    fn next(&mut self) -> Option<T::Output> {
+        Some(self.gen.gen())
+    }
 }
 
 pub fn random<T: Gen>(gen: &mut T, a: T::Output, b: T::Output) -> Option<T::Output>
@@ -47,7 +65,6 @@ pub mod lgc {
 
     #[derive(Clone, Copy)]
     pub struct Lgc {
-        //type Output = i32;
         state: u32,
         a: u32,
         c: u32,
@@ -76,7 +93,6 @@ pub mod lgc {
 
     #[derive(Clone, Copy)]
     pub struct Lgcglibc {
-        //type Output = i32,
         lgc: Lgc,
     }
 
@@ -107,7 +123,6 @@ pub mod lgc {
 
     #[derive(Clone, Copy)]
     pub struct Lgcmsvcrt {
-        //type Output = i32,
         lgc: Lgc,
     }
 
@@ -138,7 +153,6 @@ pub mod lgc {
 
     #[derive(Clone)]
     pub struct Lgcglibctypen {
-        //type Output = i32;
         states: Box<[i32]>,
     }
 

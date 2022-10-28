@@ -1,7 +1,7 @@
 extern crate wrand;
 use wrand::{lgc, Gen};
 
-fn showgen<T: Gen>(gen: &mut T, n: usize) {
+fn showgen<T: Gen<Output = i32>>(gen: &mut T, n: usize) {
     for _ in 0..n {
         println!("{}", gen.gen_range(0..100));
     }

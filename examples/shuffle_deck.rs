@@ -149,7 +149,7 @@ impl Deck {
         Self::with_suits_ranks(&suits, &ranks)
     }
 
-    fn shuffle<T: Gen>(&mut self, gen: &mut T, n: usize) {
+    fn shuffle<T: Gen<Output = i32>>(&mut self, gen: &mut T, n: usize) {
         for _ in 0..n {
             let mut tmpdeck = LinkedList::<Card>::default();
             while !self.deck.is_empty() {
