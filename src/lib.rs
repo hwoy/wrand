@@ -1,11 +1,13 @@
+pub type SEEDTYPE = u32;
+pub type RANDTYPE = u32;
+
 pub mod seed {
     use std::time::SystemTime;
-    pub fn getseed() -> u32 {
+    pub fn getseed() -> super::SEEDTYPE{
         SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
-            .subsec_micros() as u32
-    }
+            .subsec_micros() as super::SEEDTYPE    }
 }
 
 use std::ops::{Add, Range, Rem, Sub};
@@ -64,14 +66,14 @@ pub mod lgc {
     use super::Gen;
 
     pub struct Lgc {
-        state: u32,
+        state: super::SEEDTYPE,
         a: u32,
         c: u32,
         m: u64,
     }
 
     impl Lgc {
-        pub fn new(seed: u32, a: u32, c: u32, m: u64) -> Self {
+        pub fn new(seed: super::SEEDTYPE, a: u32, c: u32, m: u64) -> Self {
             Self {
                 state: seed,
                 a: a,
@@ -82,10 +84,10 @@ pub mod lgc {
     }
 
     impl Gen for Lgc {
-        type Output = i32;
+        type Output = super::RANDTYPE;
         fn gen(&mut self) -> Self::Output {
             self.state = (self.state.wrapping_mul(self.a).wrapping_add(self.c) as u64)
-                .wrapping_rem(self.m) as u32;
+                .wrapping_rem(self.m) as super::SEEDTYPE;
             self.state as Self::Output
         }
     }
@@ -95,7 +97,7 @@ pub mod lgc {
     }
 
     impl Lgcglibc {
-        pub fn with_seed(seed: u32) -> Self {
+        pub fn with_seed(seed: super::SEEDTYPE) -> Self {
             Self {
                 lgc: Lgc::new(
                     seed & ((1u32 << 31) - 1u32),
@@ -111,7 +113,7 @@ pub mod lgc {
     }
 
     impl Gen for Lgcglibc {
-        type Output = i32;
+        type Output = super::RANDTYPE;
         fn gen(&mut self) -> Self::Output {
             self.lgc.gen();
             self.lgc.state &= (1u32 << 31) - 1u32;
@@ -124,7 +126,7 @@ pub mod lgc {
     }
 
     impl Lgcmsvcrt {
-        pub fn with_seed(seed: u32) -> Self {
+        pub fn with_seed(seed: super::SEEDTYPE) -> Self {
             Self {
                 lgc: Lgc::new(
                     seed & ((1u32 << 31) - 1u32),
@@ -140,7 +142,7 @@ pub mod lgc {
     }
 
     impl Gen for Lgcmsvcrt {
-        type Output = i32;
+        type Output = super::RANDTYPE;
         fn gen(&mut self) -> Self::Output {
             self.lgc.gen();
             self.lgc.state &= (1u32 << 31) - 1u32;
@@ -185,7 +187,7 @@ pub mod lgc {
     }
 
     impl Gen for Lgcglibctypen {
-        type Output = i32;
+        type Output = super::RANDTYPE;
         fn gen(&mut self) -> Self::Output {
             let states = &mut self.states;
             let len = states.len();
