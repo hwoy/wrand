@@ -8,18 +8,34 @@ pub mod seed {
     }
 }
 
-use std::ops::Range;
+use std::ops::{Add, Range, Rem, Sub};
 pub trait Gen {
-    fn gen(&mut self) -> i32;
+    type Output;
 
-    fn gen_range(&mut self, r: Range<i32>) -> i32 {
+    fn gen(&mut self) -> Self::Output;
+
+    fn gen_range(&mut self, r: Range<Self::Output>) -> Self::Output
+    where
+        <Self as Gen>::Output: Copy
+            + Sub<Output = Self::Output>
+            + Rem<Output = Self::Output>
+            + Add<Output = Self::Output>,
+    {
         r.start + (self.gen() % (r.end - r.start))
     }
 }
 
-pub fn random<T: Gen>(gen: &mut T, a: i32, b: i32) -> Option<i32> {
+pub fn random<T: Gen>(gen: &mut T, a: T::Output, b: T::Output) -> Option<T::Output>
+where
+    <T as Gen>::Output: Copy
+        + PartialOrd
+        + From<u8>
+        + Add<Output = T::Output>
+        + Sub<Output = T::Output>
+        + Rem<Output = T::Output>,
+{
     if a <= b {
-        Some(gen.gen_range(a..(b + 1)))
+        Some(gen.gen_range(a..(b + 1u8.into())))
     } else {
         None
     }
@@ -31,6 +47,7 @@ pub mod lgc {
 
     #[derive(Clone, Copy)]
     pub struct Lgc {
+        //type Output = i32;
         state: u32,
         a: u32,
         c: u32,
@@ -49,15 +66,17 @@ pub mod lgc {
     }
 
     impl Gen for Lgc {
-        fn gen(&mut self) -> i32 {
+        type Output = i32;
+        fn gen(&mut self) -> Self::Output {
             self.state = (self.state.wrapping_mul(self.a).wrapping_add(self.c) as u64)
                 .wrapping_rem(self.m) as u32;
-            self.state as i32
+            self.state as Self::Output
         }
     }
 
     #[derive(Clone, Copy)]
     pub struct Lgcglibc {
+        //type Output = i32,
         lgc: Lgc,
     }
 
@@ -78,15 +97,17 @@ pub mod lgc {
     }
 
     impl Gen for Lgcglibc {
-        fn gen(&mut self) -> i32 {
+        type Output = i32;
+        fn gen(&mut self) -> Self::Output {
             self.lgc.gen();
             self.lgc.state &= (1u32 << 31) - 1u32;
-            self.lgc.state as i32
+            self.lgc.state as Self::Output
         }
     }
 
     #[derive(Clone, Copy)]
     pub struct Lgcmsvcrt {
+        //type Output = i32,
         lgc: Lgc,
     }
 
@@ -107,15 +128,17 @@ pub mod lgc {
     }
 
     impl Gen for Lgcmsvcrt {
-        fn gen(&mut self) -> i32 {
+        type Output = i32;
+        fn gen(&mut self) -> Self::Output {
             self.lgc.gen();
             self.lgc.state &= (1u32 << 31) - 1u32;
-            (self.lgc.state >> 16) as i32
+            (self.lgc.state >> 16) as Self::Output
         }
     }
 
     #[derive(Clone)]
     pub struct Lgcglibctypen {
+        //type Output = i32;
         states: Box<[i32]>,
     }
 
@@ -152,14 +175,15 @@ pub mod lgc {
     }
 
     impl Gen for Lgcglibctypen {
-        fn gen(&mut self) -> i32 {
+        type Output = i32;
+        fn gen(&mut self) -> Self::Output {
             let states = &mut self.states;
             let len = states.len();
 
             let val = states[len - 31].wrapping_add(states[len - 3]);
             states.rotate_left(1);
             states[len - 1] = val;
-            ((val as u32) >> 1) as i32
+            ((val as u32) >> 1) as Self::Output
         }
     }
 }
