@@ -16,4 +16,10 @@ fn main() {
     for _ in 0..20 {
         println!("{}", rng.gen_range(1..101));
     }
+
+    println!("==============================================");
+
+    for i in lgc::Lgcglibc::with_seed(10).into_geniter().take(20) {
+        println!("{}", i);
+    }
 }

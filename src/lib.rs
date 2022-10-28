@@ -33,6 +33,13 @@ pub trait Gen {
     {
         GenIterator { gen: self }
     }
+
+    fn into_geniter(self) -> IntoGenIterator<Self>
+    where
+        Self: Sized,
+    {
+        IntoGenIterator { gen: self }
+    }
 }
 
 pub struct GenIterator<'a, T: Gen + 'a> {
@@ -40,6 +47,17 @@ pub struct GenIterator<'a, T: Gen + 'a> {
 }
 
 impl<T: Gen> Iterator for GenIterator<'_, T> {
+    type Item = T::Output;
+    fn next(&mut self) -> Option<T::Output> {
+        Some(self.gen.gen())
+    }
+}
+
+pub struct IntoGenIterator<T: Gen> {
+    gen: T,
+}
+
+impl<T: Gen> Iterator for IntoGenIterator<T> {
     type Item = T::Output;
     fn next(&mut self) -> Option<T::Output> {
         Some(self.gen.gen())
