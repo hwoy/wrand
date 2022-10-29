@@ -10,7 +10,7 @@ pub mod seed {
         SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
-            .subsec_micros() as super::SEEDTYPE
+            .subsec_nanos() as super::SEEDTYPE
     }
 }
 

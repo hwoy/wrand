@@ -66,3 +66,16 @@ where
         None
     }
 }
+
+pub fn randomf64<T: Gen>(gen: &mut T) -> f64
+where
+    <T as Gen>::Output: Copy
+        + PartialOrd
+        + From<u32>
+        + Into<f64>
+        + Add<Output = T::Output>
+        + Sub<Output = T::Output>
+        + Rem<Output = T::Output>,
+{
+    gen.gen_range(0u32.into()..10001u32.into()).into() / (10000 as f64)
+}
