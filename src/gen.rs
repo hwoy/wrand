@@ -1,18 +1,8 @@
-use std::ops::{Add, Range, Rem, Sub};
+use std::ops::{Add, Rem, Sub};
 pub trait Gen {
     type Output;
 
     fn gen(&mut self) -> Self::Output;
-
-    fn gen_range(&mut self, r: Range<Self::Output>) -> Self::Output
-    where
-        <Self as Gen>::Output: Copy
-            + Sub<Output = Self::Output>
-            + Rem<Output = Self::Output>
-            + Add<Output = Self::Output>,
-    {
-        r.start + (self.gen() % (r.end - r.start))
-    }
 
     fn geniter(&mut self) -> GenIterator<Self>
     where
@@ -55,13 +45,13 @@ pub fn random<T: Gen>(gen: &mut T, a: T::Output, b: T::Output) -> Option<T::Outp
 where
     <T as Gen>::Output: Copy
         + PartialOrd
-        + From<u8>
+        + From<u32>
         + Add<Output = T::Output>
         + Sub<Output = T::Output>
         + Rem<Output = T::Output>,
 {
     if a <= b {
-        Some(gen.gen_range(a..(b + 1u8.into())))
+        Some(a + gen.gen() % (b - a + 1u32.into()))
     } else {
         None
     }
@@ -77,7 +67,6 @@ where
         + Sub<Output = T::Output>
         + Rem<Output = T::Output>,
 {
-    gen.gen_range(0u32.into()..10001u32.into()).into() / (10000 as f64)
-        * gen.gen_range(0u32.into()..10001u32.into()).into()
-        / (10000 as f64)
+    (random(gen, 0u32.into(), 10000u32.into()).unwrap().into() / (10000 as f64))
+        * (random(gen, 0u32.into(), 10000u32.into()).unwrap().into() / (10000 as f64))
 }

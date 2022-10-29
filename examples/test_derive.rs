@@ -3,7 +3,7 @@ use wrand::{rng, Gen};
 
 fn showgen<T: Gen<Output = wrand::RANDTYPE>>(rng: &mut T, n: usize) {
     for _ in 0..n {
-        println!("{}", rng.gen_range(0..100));
+        println!("{}", wrand::random(rng, 0, 100).unwrap());
     }
 }
 
