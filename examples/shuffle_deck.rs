@@ -155,8 +155,8 @@ impl Deck {
         for _ in 0..n {
             let mut tmpdeck = LinkedList::<Card>::default();
             while !self.deck.is_empty() {
-                let size = wrand::random(gen, 0, (self.deck.len() - 1) as wrand::RANDTYPE).unwrap()
-                    as usize;
+                let size = wrand::random(gen.gen(), 0, (self.deck.len() - 1) as wrand::RANDTYPE)
+                    .unwrap() as usize;
                 let mut splitdeck = self.deck.split_off(size as usize);
 
                 tmpdeck.push_back(splitdeck.pop_front().unwrap());

@@ -14,7 +14,7 @@ fn main() {
     println!("==============================================");
 
     for _ in 0..20 {
-        println!("{}", wrand::random(&mut rng, 1, 100).unwrap());
+        println!("{}", wrand::random(rng.gen(), 1, 100).unwrap());
     }
 
     println!("==============================================");

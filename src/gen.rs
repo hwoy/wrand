@@ -41,34 +41,28 @@ impl<T: Gen> Iterator for IntoGenIterator<T> {
     }
 }
 
-pub fn random<T: Gen>(gen: &mut T, a: T::Output, b: T::Output) -> Option<T::Output>
+pub fn random<T>(value: T, a: T, b: T) -> Option<T>
 where
-    <T as Gen>::Output: Copy
-        + PartialOrd
-        + From<u32>
-        + Add<Output = T::Output>
-        + Sub<Output = T::Output>
-        + Rem<Output = T::Output>,
+    T: Copy + PartialOrd + From<u32> + Add<Output = T> + Sub<Output = T> + Rem<Output = T>,
 {
     if a <= b {
-        Some(a + gen.gen() % (b - a + 1u32.into()))
+        Some(a + value % (b - a + 1u32.into()))
     } else {
         None
     }
 }
 
-pub fn randomf64<T: Gen>(gen: &mut T) -> f64
+pub fn randomf64<T>(gen: T) -> f64
 where
-    <T as Gen>::Output: Copy
+    T: Copy
         + PartialOrd
         + From<u32>
         + Into<f64>
-        + Add<Output = T::Output>
-        + Sub<Output = T::Output>
-        + Rem<Output = T::Output>,
+        + Add<Output = T>
+        + Sub<Output = T>
+        + Rem<Output = T>,
 {
-    random(gen, 0u32.into(), 100000000u32.into())
-        .unwrap()
-        .into()
+    (random(gen, 0u32.into(), 10000u32.into()).unwrap().into()
+        * random(gen, 0u32.into(), 10000u32.into()).unwrap().into())
         / (100000000u32 as f64)
 }
