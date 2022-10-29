@@ -67,6 +67,8 @@ where
         + Sub<Output = T::Output>
         + Rem<Output = T::Output>,
 {
-    (random(gen, 0u32.into(), 10000u32.into()).unwrap().into() / (10000 as f64))
-        * (random(gen, 0u32.into(), 10000u32.into()).unwrap().into() / (10000 as f64))
+    random(gen, 0u32.into(), 100000000u32.into())
+        .unwrap()
+        .into()
+        / (100000000u32 as f64)
 }
