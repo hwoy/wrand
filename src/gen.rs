@@ -78,4 +78,6 @@ where
         + Rem<Output = T::Output>,
 {
     gen.gen_range(0u32.into()..10001u32.into()).into() / (10000 as f64)
+        * gen.gen_range(0u32.into()..10001u32.into()).into()
+        / (10000 as f64)
 }

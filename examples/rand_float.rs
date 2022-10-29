@@ -4,6 +4,6 @@ fn main() {
     let mut rng = rng::Lgcglibctypen::new();
 
     for _ in 0..20 {
-        println!("{:.4}", randomf64(&mut rng));
+        println!("{:.8}", randomf64(&mut rng));
     }
 }
