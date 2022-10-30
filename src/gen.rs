@@ -52,3 +52,28 @@ where
         None
     }
 }
+
+pub trait GenIterTrait {
+    type Output;
+    fn gen(&mut self) -> Option<Self::Output>;
+}
+
+pub struct GenIter<I> {
+    iter: I,
+}
+
+impl<A, I> GenIterTrait for GenIter<I>
+where
+    I: Iterator<Item = A>,
+{
+    type Output = I::Item;
+    #[inline]
+    fn gen(&mut self) -> Option<Self::Output> {
+        self.iter.next()
+    }
+}
+
+#[inline]
+pub fn from_iter<A, I: Iterator<Item = A>>(iter: I) -> GenIter<I> {
+    GenIter { iter: iter }
+}
