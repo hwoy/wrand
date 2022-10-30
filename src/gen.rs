@@ -55,25 +55,35 @@ where
 
 pub trait RandomTrait {
     type Output;
-    fn rand(&mut self) -> Option<Self::Output>;
+    fn rand(&mut self) -> Self::Output;
 }
 
 pub struct Random<I> {
     iter: I,
 }
 
+impl<A, I> Random<I>
+where
+    I: Iterator<Item = A>,
+{
+    #[inline]
+    pub fn new_fromiter(iter: I) -> Random<I> {
+        Random { iter: iter }
+    }
+
+    #[inline]
+    pub fn into_iter(self) -> I {
+        self.iter
+    }
+}
+
 impl<A, I> RandomTrait for Random<I>
 where
     I: Iterator<Item = A>,
 {
-    type Output = I::Item;
+    type Output = Option<I::Item>;
     #[inline]
-    fn rand(&mut self) -> Option<Self::Output> {
+    fn rand(&mut self) -> Self::Output {
         self.iter.next()
     }
-}
-
-#[inline]
-pub fn from_iter<A, I: Iterator<Item = A>>(iter: I) -> Random<I> {
-    Random { iter: iter }
 }

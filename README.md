@@ -11,11 +11,11 @@ wrand stands for Hwoy's random, is a very simple random library for Rust.
 ```Rust
 
 extern crate wrand;
-use wrand::{from_iter, random, rng, Gen, RandomTrait};
+use wrand::{random, rng, Gen, Random, RandomTrait};
 fn main() {
     let mut rng = rng::Lgcmsvcrt::new();
 
-    let mut rnd = from_iter(std::iter::repeat_with(|| {
+    let mut rnd = Random::new_fromiter(std::iter::repeat_with(|| {
         random(rng.gen(), 1, 100).unwrap()
     }));
 
@@ -25,14 +25,21 @@ fn main() {
 
     println!("==============================");
 
-    let mut rnd = from_iter(std::iter::repeat_with(|| {
-        random(rng.gen(), 10, 20).unwrap()
-    }));
+    let mut rnd_iter = rnd.into_iter();
+
+    for _ in 0..100 {
+        println!("{}", rnd_iter.next().unwrap());
+    }
+
+    println!("==============================");
+
+    let mut rnd = Random::new_fromiter(rnd_iter);
 
     for _ in 0..100 {
         println!("{}", rnd.rand().unwrap());
     }
 }
+
 
 ```
 
