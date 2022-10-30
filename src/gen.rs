@@ -1,4 +1,4 @@
-use std::ops::{Add, Rem, Sub};
+use std::ops::{Add, Mul, Rem, Sub};
 pub trait Gen {
     type Output;
 
@@ -60,9 +60,11 @@ where
         + Into<f64>
         + Add<Output = T>
         + Sub<Output = T>
+        + Mul<Output = T>
         + Rem<Output = T>,
 {
-    (random(gen, 0u32.into(), 10000u32.into()).unwrap().into()
-        * random(gen, 0u32.into(), 10000u32.into()).unwrap().into())
+    (random(gen, 0u32.into(), 10000u32.into()).unwrap()
+        * random(gen, 0u32.into(), 10000u32.into()).unwrap())
+    .into()
         / (100000000u32 as f64)
 }
