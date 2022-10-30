@@ -5,7 +5,7 @@ wrand stands for Hwoy's random, is a very simple random library for Rust.
 ## Features
 
 1. Full open source.
-2. Provides iterator.
+2. Provides iterator(Removed).
 3. Provides basic lgc PRNG, msvcrt PRNG, glibc PRNG
 
 ```Rust
