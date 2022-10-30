@@ -41,6 +41,7 @@ impl<T: Gen> Iterator for IntoGenIterator<T> {
     }
 }
 
+#[inline]
 pub fn random<T>(value: T, a: T, b: T) -> Option<T>
 where
     T: Copy + PartialOrd + From<u32> + Add<Output = T> + Sub<Output = T> + Rem<Output = T>,
@@ -52,19 +53,34 @@ where
     }
 }
 
-pub fn randomf64<T>(gen: T) -> f64
+pub struct Genf64 {
+    val: f64,
+}
+
+pub fn genf64<T: Gen>(gen: &mut T) -> Genf64
 where
-    T: Copy
+    <T as Gen>::Output: Copy
         + PartialOrd
         + From<u32>
         + Into<f64>
-        + Add<Output = T>
-        + Sub<Output = T>
-        + Mul<Output = T>
-        + Rem<Output = T>,
+        + Add<Output = T::Output>
+        + Sub<Output = T::Output>
+        + Mul<Output = T::Output>
+        + Rem<Output = T::Output>,
 {
-    (random(gen, 0u32.into(), 10000u32.into()).unwrap()
-        * random(gen, 0u32.into(), 10000u32.into()).unwrap())
-    .into()
-        / (100000000u32 as f64)
+    Genf64 {
+        val: (random(gen.gen(), 0u32.into(), 10000u32.into()).unwrap()
+            * random(gen.gen(), 0u32.into(), 10000u32.into()).unwrap())
+        .into()
+            / (100000000u32 as f64),
+    }
+}
+
+#[inline]
+pub fn randomf64(Genf64 { val }: Genf64, a: f64, b: f64) -> Option<f64> {
+    if a <= b {
+        Some(a + val * (b - a))
+    } else {
+        None
+    }
 }
