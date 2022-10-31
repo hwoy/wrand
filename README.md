@@ -1,11 +1,12 @@
 # wrand
 
-wrand stands for Hwoy's random, is a very simple random library for Rust.
+- wrand stands for Hwoy's random, is a very simple random library for Rust.
+- Yet another rand crate.
 
 ## Features
 
 1. Full open source.
-2. Provides iterator(Removed).
+2. Provides iterator.
 3. Provides basic lgc PRNG, msvcrt PRNG, glibc PRNG
 
 ```Rust
